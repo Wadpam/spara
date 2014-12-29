@@ -23,7 +23,7 @@
 
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
   <listener>
-    <listener-class>com.wadpam.guja.config.SparaGuiceServletContextListener</listener-class>
+    <listener-class>com.wadpam.spara.config.SparaGuiceServletContextListener</listener-class>
   </listener>
   <filter>
     <filter-name>guice</filter-name>
@@ -44,6 +44,10 @@
   <filter-mapping>
     <filter-name>guice</filter-name>
     <url-pattern>/pub/*</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>guice</filter-name>
+    <url-pattern>/hooks/*</url-pattern>
   </filter-mapping>
 
   <security-constraint>

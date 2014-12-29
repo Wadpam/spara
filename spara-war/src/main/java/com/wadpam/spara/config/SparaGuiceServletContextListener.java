@@ -30,11 +30,14 @@ import com.google.inject.name.Names;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
+import com.wadpam.guja.cache.CacheBuilderProvider;
+import com.wadpam.guja.cache.MemCacheBuilderProvider;
 import com.wadpam.guja.config.GujaBaseModule;
 import com.wadpam.guja.config.GujaCoreModule;
 import com.wadpam.guja.config.GujaGAEModule;
 import com.wadpam.guja.oauth2.web.OAuth2Filter;
 import com.wadpam.guja.oauth2.web.Oauth2ClientAuthenticationFilter;
+import com.wadpam.spara.hooks.GithubResource;
 import net.sf.mardao.dao.DatastoreSupplier;
 import net.sf.mardao.dao.Supplier;
 import org.slf4j.Logger;
@@ -81,6 +84,9 @@ public class SparaGuiceServletContextListener extends GuiceServletContextListene
             bindProperties();
 
             bind(Supplier.class).to(DatastoreSupplier.class);
+            bind(CacheBuilderProvider.class).to(MemCacheBuilderProvider.class);
+
+            bind(GithubResource.class);
 
             // Filters
             //filter("/*").through(PersistFilter.class);
