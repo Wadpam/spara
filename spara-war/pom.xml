@@ -58,6 +58,14 @@
 
         <!-- Test Dependencies -->
         <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.google.appengine</groupId>
             <artifactId>appengine-testing</artifactId>
             <version>${appengine.target.version}</version>
@@ -150,7 +158,7 @@
                             </execution>
                         </executions>
                         <configuration>
-                            <basePackage>com.wadpam.guja</basePackage>
+                            <basePackage>com.wadpam.spara</basePackage>
                             <targetFolder>${project.basedir}/src/main/java</targetFolder>
                         </configuration>
                     </plugin>

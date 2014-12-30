@@ -1,5 +1,8 @@
 package com.wadpam.spara.hooks;
 
+import com.google.common.collect.ImmutableMap;
+import com.wadpam.spara.hooks.github.GithubEvent;
+import com.wadpam.spara.hooks.github.PushHook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +14,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Enumeration;
 import java.util.Map;
 
 /**
@@ -22,15 +24,28 @@ import java.util.Map;
 public class GithubResource {
 
     static final Logger LOGGER = LoggerFactory.getLogger(GithubResource.class);
+    public static final String X_GIT_HUB_EVENT = "X-GitHub-Event";
+
+    public static ImmutableMap<GithubEvent, ? extends EventHook> HOOKS = ImmutableMap.of(
+        GithubEvent.ping, new PushHook(),
+        GithubEvent.push, new PushHook()
+    );
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response webhook(@Context HttpServletRequest request, Map<String, Object> body) {
-        for (Enumeration<String> names = request.getHeaderNames(); names.hasMoreElements(); ) {
-            String name = names.nextElement();
-            LOGGER.debug("{}: {}", name, request.getHeader(name));
+        final String xGithubEvent = request.getHeader(X_GIT_HUB_EVENT);
+        LOGGER.info("{}: {}", X_GIT_HUB_EVENT, xGithubEvent);
+        GithubEvent event = GithubEvent.valueOf(xGithubEvent);
+
+        EventHook eventHook = HOOKS.get(event);
+
+        if (null != eventHook) {
+            eventHook.process(body);
         }
-        LOGGER.info("body={}", body);
+        else {
+            LOGGER.warn("No such EventHook for {}", xGithubEvent);
+        }
 
         return Response.ok().build();
     }

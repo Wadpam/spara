@@ -37,6 +37,10 @@ import com.wadpam.guja.config.GujaCoreModule;
 import com.wadpam.guja.config.GujaGAEModule;
 import com.wadpam.guja.oauth2.web.OAuth2Filter;
 import com.wadpam.guja.oauth2.web.Oauth2ClientAuthenticationFilter;
+import com.wadpam.spara.api.ProjectResource;
+import com.wadpam.spara.api.SparaResource;
+import com.wadpam.spara.dao.DProjectDaoBean;
+import com.wadpam.spara.dao.DTicketDaoBean;
 import com.wadpam.spara.hooks.GithubResource;
 import net.sf.mardao.dao.DatastoreSupplier;
 import net.sf.mardao.dao.Supplier;
@@ -53,58 +57,64 @@ import java.util.Properties;
  */
 public class SparaGuiceServletContextListener extends GuiceServletContextListener {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(SparaGuiceServletContextListener.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SparaGuiceServletContextListener.class);
 
-  private static final String APP_CONFIG_PROPERTY_FILE = "/WEB-INF/app.properties";
+    private static final String APP_CONFIG_PROPERTY_FILE = "/WEB-INF/app.properties";
 
-  @Override
-  protected Injector getInjector() {
+    @Override
+    protected Injector getInjector() {
 
-    return Guice.createInjector(
-        new GujaCoreModule(),
-        new GujaBaseModule(),
-        new GujaGAEModule(),
-        new JerseyServletModule() {
+        return Guice.createInjector(
+                new GujaCoreModule(),
+                new GujaBaseModule(),
+                new GujaGAEModule(),
+                new JerseyServletModule() {
 
-          private void bindProperties() {
-            try {
-              Properties properties = new Properties();
-              properties.load(getServletContext().getResourceAsStream(APP_CONFIG_PROPERTY_FILE));
-              Names.bindProperties(binder(), properties);
-            } catch (IOException e) {
-              LOGGER.error("Failed to load app properties from resource file {} with error {}", APP_CONFIG_PROPERTY_FILE, e);
-            }
+                    private void bindProperties() {
+                        try {
+                            Properties properties = new Properties();
+                            properties.load(getServletContext().getResourceAsStream(APP_CONFIG_PROPERTY_FILE));
+                            Names.bindProperties(binder(), properties);
+                        } catch (IOException e) {
+                            LOGGER.error("Failed to load app properties from resource file {} with error {}", APP_CONFIG_PROPERTY_FILE, e);
+                        }
 
-          }
+                    }
 
-          @Override
-          protected void configureServlets() {
+                    @Override
+                    protected void configureServlets() {
 
-            // Bindings
-            bindProperties();
+                        // Bindings
+                        bindProperties();
 
-            bind(Supplier.class).to(DatastoreSupplier.class);
-            bind(CacheBuilderProvider.class).to(MemCacheBuilderProvider.class);
+                        bind(Supplier.class).to(DatastoreSupplier.class);
+                        bind(CacheBuilderProvider.class).to(MemCacheBuilderProvider.class);
 
-            bind(GithubResource.class);
+                        bind(DProjectDaoBean.class);
+                        bind(DTicketDaoBean.class);
 
-            // Filters
-            //filter("/*").through(PersistFilter.class);
-            filter("/api/*").through(OAuth2Filter.class);
-            filter("/oauth/*").through(Oauth2ClientAuthenticationFilter.class);
+                        bind(ProjectResource.class);
 
-            // Servlets
-            serve("/*").with(GuiceContainer.class, ImmutableMap.of(
-                "jersey.config.server.tracing.type", "ALL",
-                "com.sun.jersey.spi.container.ContainerResponseFilters", "com.wadpam.guja.filter.ProtoWrapperFilter",
-                "com.sun.jersey.spi.container.ResourceFilters", "com.sun.jersey.api.container.filter.RolesAllowedResourceFilterFactory"
-            ));
+                        bind(GithubResource.class);
+                        bind(SparaResource.class);
 
-            // TODO Find a better way to configure Jersey filters (Guice integration does not support Jersey filter configuration here)
-          }
-        }
-    );
-  }
+                        // Filters
+                        //filter("/*").through(PersistFilter.class);
+                        filter("/api/*").through(OAuth2Filter.class);
+                        filter("/oauth/*").through(Oauth2ClientAuthenticationFilter.class);
+
+                        // Servlets
+                        serve("/*").with(GuiceContainer.class, ImmutableMap.of(
+                                "jersey.config.server.tracing.type", "ALL",
+                                "com.sun.jersey.spi.container.ContainerResponseFilters", "com.wadpam.guja.filter.ProtoWrapperFilter",
+                                "com.sun.jersey.spi.container.ResourceFilters", "com.sun.jersey.api.container.filter.RolesAllowedResourceFilterFactory"
+                        ));
+
+                        // TODO Find a better way to configure Jersey filters (Guice integration does not support Jersey filter configuration here)
+                    }
+                }
+        );
+    }
 }
 
 
