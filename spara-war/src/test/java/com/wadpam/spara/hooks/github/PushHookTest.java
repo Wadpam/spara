@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.ParseException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -19,7 +20,7 @@ public class PushHookTest {
     @Test
     public void testProcess() throws IOException {
         final String json = getResourceAsString("/push.json");
-        PushHook hook = (PushHook) GithubResource.HOOKS.get(GithubEvent.push);
+        PushHook hook = new PushHook(null);
         PushRequest event = hook.parseEvent(json);
 
         assertEquals(2, event.getCommits().size());
@@ -38,5 +39,10 @@ public class PushHookTest {
             sb.append(s);
         }
         return sb.toString();
+    }
+
+    @Test
+    public void testDateFormat() throws ParseException {
+        assertEquals(PushHook.SDF.parse("2014-12-30T12:15:45+00:00"), PushHook.SDF.parse("2014-12-30T13:15:45+01:00"));
     }
 }

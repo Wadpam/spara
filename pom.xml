@@ -22,7 +22,7 @@
         <gae.version>1.9.10</gae.version>
         <appengine.target.version>1.9.10</appengine.target.version>
         <mardao.version>3.0.10-SNAPSHOT</mardao.version>
-        <guja.version>0.0.3</guja.version>
+        <guja.version>0.0.4-SNAPSHOT</guja.version>
     </properties>
         
     <dependencyManagement>

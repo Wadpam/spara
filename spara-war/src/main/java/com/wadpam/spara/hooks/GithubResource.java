@@ -1,6 +1,8 @@
 package com.wadpam.spara.hooks;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.inject.Inject;
+import com.wadpam.spara.api.SparaResource;
 import com.wadpam.spara.hooks.github.GithubEvent;
 import com.wadpam.spara.hooks.github.PushHook;
 import org.slf4j.Logger;
@@ -14,6 +16,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -26,10 +29,12 @@ public class GithubResource {
     static final Logger LOGGER = LoggerFactory.getLogger(GithubResource.class);
     public static final String X_GIT_HUB_EVENT = "X-GitHub-Event";
 
-    public static ImmutableMap<GithubEvent, ? extends EventHook> HOOKS = ImmutableMap.of(
-        GithubEvent.ping, new PushHook(),
-        GithubEvent.push, new PushHook()
-    );
+    private final Map<GithubEvent, EventHook> HOOKS = new HashMap<>();
+
+    @Inject
+    public GithubResource(SparaResource sparaResource) {
+        HOOKS.put(GithubEvent.push, new PushHook(sparaResource));
+    }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)

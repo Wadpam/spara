@@ -1,6 +1,7 @@
 package com.wadpam.spara.api;
 
 import com.google.common.collect.ImmutableSortedSet;
+import com.wadpam.guja.util.Pair;
 import org.junit.Test;
 
 import java.util.TreeSet;
@@ -14,6 +15,6 @@ public class SparaResourceTest {
 
     @Test
     public void testFindTicketIds() {
-        assertEquals(ImmutableSortedSet.of("ABC-123", "D-2"), SparaResource.findTicketIds("D-2 ABC-123 def-456 ABC-ABC this is my first commit."));
+        assertEquals(ImmutableSortedSet.of(Pair.of("ABC", 123L), Pair.of("D", 2L)), SparaResource.findTicketIds("D-2 ABC-123 def-456 ABC-ABC this is my first commit."));
     }
 }
