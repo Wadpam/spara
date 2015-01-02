@@ -40,6 +40,7 @@ import com.wadpam.guja.oauth2.web.Oauth2ClientAuthenticationFilter;
 import com.wadpam.spara.api.ProjectResource;
 import com.wadpam.spara.api.SparaResource;
 import com.wadpam.spara.api.TicketResource;
+import com.wadpam.spara.dao.DCommitDaoBean;
 import com.wadpam.spara.dao.DProjectDaoBean;
 import com.wadpam.spara.dao.DTicketDaoBean;
 import com.wadpam.spara.hooks.GithubResource;
@@ -93,6 +94,7 @@ public class SparaGuiceServletContextListener extends GuiceServletContextListene
 
                         bind(DProjectDaoBean.class);
                         bind(DTicketDaoBean.class);
+                        bind(DCommitDaoBean.class);
 
                         bind(ProjectResource.class);
                         bind(TicketResource.class);

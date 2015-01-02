@@ -60,6 +60,11 @@ public class SparaResource {
                     .id(1L)
                     .title("Bootstrap the Spara project")
                     .build());
+            ticketDao.put(DTicketDaoBean.newBuilder()
+                    .projectKey(projectKey)
+                    .id(3L)
+                    .title("PushHook in Github")
+                    .build());
 
             LOGGER.info("populated example");
         }
@@ -81,12 +86,14 @@ public class SparaResource {
         // iterate across mentioned tickets
         for (Pair<String, Long> ticketPair : findTicketIds(message)) {
 
-            // check if project exists
             final String projectId = ticketPair.first();
+            final Long ticketId = ticketPair.second();
+            LOGGER.info("parsed ticket {}-{}", projectId, ticketId);
+
+            // check if project exists
             final DProject project = projectDao.get(projectId);
             if (null != project) {
                 final Object projectKey = projectDao.getKey(projectId);
-                final Long ticketId = ticketPair.second();
                 final Object ticketKey = ticketDao.getKey(projectKey, ticketId);
 
                 final DCommit commit = commitDao.newBuilder()

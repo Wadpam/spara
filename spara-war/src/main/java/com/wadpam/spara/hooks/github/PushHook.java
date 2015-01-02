@@ -7,6 +7,7 @@ import com.wadpam.spara.hooks.EventHook;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Set;
 
 /**
  * Created by sosandstrom on 2014-12-29.
@@ -29,8 +30,9 @@ public class PushHook extends EventHook<PushRequest> {
         if (null != push.getCommits()) {
             for (Commit commit : push.getCommits()) {
                 try {
-                    sparaResource.processCommit(commit.getMessage(), commit.getId(), commit.getAuthor().getUsername(),
+                    Set<String> tickets = sparaResource.processCommit(commit.getMessage(), commit.getId(), commit.getAuthor().getUsername(),
                             SDF.parse(commit.getTimestamp()), commit.getUrl());
+                    LOGGER.info("tagged {} for commit '{}'", tickets, commit.getMessage());
                 } catch (ParseException e) {
                     e.printStackTrace();
                 } catch (IOException e) {

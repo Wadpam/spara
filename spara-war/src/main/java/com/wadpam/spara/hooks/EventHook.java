@@ -19,9 +19,11 @@ public abstract class EventHook<T> {
 
     public void process(Map<String, Object> body) {
         final String json = JsonUtils.toString(body);
+        process(json);
     }
 
     protected void process(String json) {
+        LOGGER.debug(json);
         T event = parseEvent(json);
         onEvent(event);
     }
