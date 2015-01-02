@@ -1,7 +1,7 @@
 package com.wadpam.spara.domain;
 
 import net.sf.mardao.core.Parent;
-import net.sf.mardao.core.domain.AbstractLongEntity;
+import net.sf.mardao.domain.AbstractLongEntity;
 
 import javax.persistence.Basic;
 import javax.persistence.Entity;

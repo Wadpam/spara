@@ -7,27 +7,28 @@ import java.nio.ByteBuffer;
 import net.sf.mardao.dao.Mapper;
 import net.sf.mardao.dao.Supplier;
 import net.sf.mardao.domain.AbstractEntityBuilder;
-import com.wadpam.spara.domain.DProject;
+import com.wadpam.spara.domain.DCommit;
 
 /**
- * The DProject domain-object specific mapping methods go here.
+ * The DCommit domain-object specific mapping methods go here.
  *
  * Generated on 2015-01-02T12:29:46.798+0100.
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
-public class DProjectMapper
-  implements Mapper<DProject, String> {
+public class DCommitMapper
+  implements Mapper<DCommit, String> {
 
   private final Supplier supplier;
 
   public enum Field {
+    TICKETKEY("ticketKey"),
     ID("id"),
     CREATEDBY("createdBy"),
     CREATEDDATE("createdDate"),
-    DESCRIPTION("description"),
-    DISPLAYNAME("displayName"),
+    MESSAGE("message"),
     UPDATEDBY("updatedBy"),
-    UPDATEDDATE("updatedDate");
+    UPDATEDDATE("updatedDate"),
+    URL("url");
 
     private final String fieldName;
 
@@ -40,7 +41,7 @@ public class DProjectMapper
     }
   }
 
-  public DProjectMapper(Supplier supplier) {
+  public DCommitMapper(Supplier supplier) {
     this.supplier = supplier;
   }
 
@@ -50,20 +51,23 @@ public class DProjectMapper
   }
 
   @Override
-  public DProject fromReadValue(Object value) {
-    final DProject entity = new DProject();
+  public DCommit fromReadValue(Object value) {
+    final DCommit entity = new DCommit();
 
     // set primary key:
     final Object key = supplier.getKey(value, Field.ID.getFieldName());
     entity.setId(supplier.toStringKey(key));
 
+    // set parent key:
+    entity.setTicketKey(supplier.getParentKey(value, Field.TICKETKEY.getFieldName()));
+
     // set all fields:
     entity.setCreatedBy(supplier.getString(value, Field.CREATEDBY.getFieldName()));
     entity.setCreatedDate(supplier.getDate(value, Field.CREATEDDATE.getFieldName()));
-    entity.setDescription(supplier.getString(value, Field.DESCRIPTION.getFieldName()));
-    entity.setDisplayName(supplier.getString(value, Field.DISPLAYNAME.getFieldName()));
+    entity.setMessage(supplier.getString(value, Field.MESSAGE.getFieldName()));
     entity.setUpdatedBy(supplier.getString(value, Field.UPDATEDBY.getFieldName()));
     entity.setUpdatedDate(supplier.getDate(value, Field.UPDATEDDATE.getFieldName()));
+    entity.setUrl(supplier.getString(value, Field.URL.getFieldName()));
     return entity;
   }
 
@@ -88,22 +92,22 @@ public class DProjectMapper
   }
 
   @Override
-  public String getId(DProject entity) {
+  public String getId(DCommit entity) {
     return entity != null ? entity.getId() : null;
   }
 
   @Override
-  public Object getParentKey(DProject entity) {
-    return null;
+  public Object getParentKey(DCommit entity) {
+    return null != entity ? entity.getTicketKey() : null;
   }
 
   @Override
-  public void setParentKey(DProject entity, Object parentKey) {
-    // this entity has no parent
+  public void setParentKey(DCommit entity, Object parentKey) {
+    entity.setTicketKey(parentKey);
   }
 
   @Override
-  public void updateEntityPostWrite(DProject entity, Object key, Object value) {
+  public void updateEntityPostWrite(DCommit entity, Object key, Object value) {
     entity.setId(supplier.toStringKey(key));
     entity.setCreatedBy(supplier.getString(value, Field.CREATEDBY.getFieldName()));
     entity.setCreatedDate(supplier.getDate(value, Field.CREATEDDATE.getFieldName()));
@@ -113,7 +117,7 @@ public class DProjectMapper
 
 @Override
   public String getKind() {
-    return DProject.class.getSimpleName();
+    return DCommit.class.getSimpleName();
   }
 
   @Override
@@ -122,7 +126,7 @@ public class DProjectMapper
   }
 
   @Override
-  public Object toWriteValue(DProject entity) {
+  public Object toWriteValue(DCommit entity) {
     final String id = getId(entity);
     final Object parentKey = getParentKey(entity);
     final Object value = supplier.createWriteValue(parentKey, getKind(), id);
@@ -130,10 +134,10 @@ public class DProjectMapper
     // set all fields:
     supplier.setString(value, Field.CREATEDBY.getFieldName(), entity.getCreatedBy());
     supplier.setDate(value, Field.CREATEDDATE.getFieldName(), entity.getCreatedDate());
-    supplier.setString(value, Field.DESCRIPTION.getFieldName(), entity.getDescription());
-    supplier.setString(value, Field.DISPLAYNAME.getFieldName(), entity.getDisplayName());
+    supplier.setString(value, Field.MESSAGE.getFieldName(), entity.getMessage());
     supplier.setString(value, Field.UPDATEDBY.getFieldName(), entity.getUpdatedBy());
     supplier.setDate(value, Field.UPDATEDDATE.getFieldName(), entity.getUpdatedDate());
+    supplier.setString(value, Field.URL.getFieldName(), entity.getUrl());
     return value;
   }
 
@@ -141,14 +145,19 @@ public class DProjectMapper
     return new Builder();
   }
 
-  public static class Builder extends AbstractEntityBuilder<DProject> {
+  public static class Builder extends AbstractEntityBuilder<DCommit> {
 
     protected Builder() {
-      super(new DProject());
+      super(new DCommit());
     }
 
     public Builder id(String id) {
       entity.setId(id);
+      return this;
+    }
+
+    public Builder ticketKey(Object ticketKey) {
+      entity.setTicketKey(ticketKey);
       return this;
     }
 
@@ -162,13 +171,8 @@ public class DProjectMapper
       return this;
     }
 
-    public Builder description(String description) {
-      entity.setDescription(description);
-      return this;
-    }
-
-    public Builder displayName(String displayName) {
-      entity.setDisplayName(displayName);
+    public Builder message(String message) {
+      entity.setMessage(message);
       return this;
     }
 
@@ -179,6 +183,11 @@ public class DProjectMapper
 
     public Builder updatedDate(Date updatedDate) {
       entity.setUpdatedDate(updatedDate);
+      return this;
+    }
+
+    public Builder url(String url) {
+      entity.setUrl(url);
       return this;
     }
 

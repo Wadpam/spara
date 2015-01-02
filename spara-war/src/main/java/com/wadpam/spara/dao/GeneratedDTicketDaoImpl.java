@@ -20,7 +20,7 @@ import com.wadpam.spara.domain.DTicket;
 /**
  * The DTicket domain-object specific finders and methods go in this POJO.
  * 
- * Generated on 2014-12-30T10:42:27.179+0100.
+ * Generated on 2015-01-02T12:29:46.798+0100.
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
 public class GeneratedDTicketDaoImpl
@@ -86,7 +86,10 @@ public class GeneratedDTicketDaoImpl
   }
 
 
-// ----------------------- query methods -------------------------------
+// ----------------------- DTicket builder -------------------------------
 
+  public static DTicketMapper.Builder newBuilder() {
+    return DTicketMapper.newBuilder();
+  }
 
 }

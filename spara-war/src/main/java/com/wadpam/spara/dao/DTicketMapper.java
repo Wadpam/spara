@@ -12,7 +12,7 @@ import com.wadpam.spara.domain.DTicket;
 /**
  * The DTicket domain-object specific mapping methods go here.
  *
- * Generated on 2014-12-30T10:42:27.179+0100.
+ * Generated on 2015-01-02T12:29:46.798+0100.
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
 public class DTicketMapper
@@ -141,45 +141,55 @@ public class DTicketMapper
     return value;
   }
 
-  public static DTicketBuilder newBuilder() {
-    return new DTicketBuilder();
+  public static Builder newBuilder() {
+    return new Builder();
   }
 
-  public static class DTicketBuilder extends AbstractEntityBuilder<DTicket> {
+  public static class Builder extends AbstractEntityBuilder<DTicket> {
 
-    @Override
-    protected DTicket newInstance() {
-      return new DTicket();
+    protected Builder() {
+      super(new DTicket());
     }
 
-    public DTicketBuilder id(Long id) {
+    public Builder id(Long id) {
       entity.setId(id);
       return this;
     }
 
-    public DTicketBuilder createdBy(String createdBy) {
+    public Builder projectKey(Object projectKey) {
+      entity.setProjectKey(projectKey);
+      return this;
+    }
+
+    public Builder createdBy(String createdBy) {
       entity.setCreatedBy(createdBy);
       return this;
     }
-    public DTicketBuilder createdDate(Date createdDate) {
+
+    public Builder createdDate(Date createdDate) {
       entity.setCreatedDate(createdDate);
       return this;
     }
-    public DTicketBuilder description(String description) {
+
+    public Builder description(String description) {
       entity.setDescription(description);
       return this;
     }
-    public DTicketBuilder title(String title) {
+
+    public Builder title(String title) {
       entity.setTitle(title);
       return this;
     }
-    public DTicketBuilder updatedBy(String updatedBy) {
+
+    public Builder updatedBy(String updatedBy) {
       entity.setUpdatedBy(updatedBy);
       return this;
     }
-    public DTicketBuilder updatedDate(Date updatedDate) {
+
+    public Builder updatedDate(Date updatedDate) {
       entity.setUpdatedDate(updatedDate);
       return this;
     }
+
   }
 }

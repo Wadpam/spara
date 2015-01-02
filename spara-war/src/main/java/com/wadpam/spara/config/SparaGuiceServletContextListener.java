@@ -39,6 +39,7 @@ import com.wadpam.guja.oauth2.web.OAuth2Filter;
 import com.wadpam.guja.oauth2.web.Oauth2ClientAuthenticationFilter;
 import com.wadpam.spara.api.ProjectResource;
 import com.wadpam.spara.api.SparaResource;
+import com.wadpam.spara.api.TicketResource;
 import com.wadpam.spara.dao.DProjectDaoBean;
 import com.wadpam.spara.dao.DTicketDaoBean;
 import com.wadpam.spara.hooks.GithubResource;
@@ -64,7 +65,7 @@ public class SparaGuiceServletContextListener extends GuiceServletContextListene
     @Override
     protected Injector getInjector() {
 
-        return Guice.createInjector(
+        Injector injector = Guice.createInjector(
                 new GujaCoreModule(),
                 new GujaBaseModule(),
                 new GujaGAEModule(),
@@ -94,6 +95,7 @@ public class SparaGuiceServletContextListener extends GuiceServletContextListene
                         bind(DTicketDaoBean.class);
 
                         bind(ProjectResource.class);
+                        bind(TicketResource.class);
 
                         bind(GithubResource.class);
                         bind(SparaResource.class);
@@ -114,6 +116,14 @@ public class SparaGuiceServletContextListener extends GuiceServletContextListene
                     }
                 }
         );
+        try {
+            SparaResource spara = injector.getInstance(SparaResource.class);
+            spara.populateExample();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return injector;
     }
 }
 

@@ -6,6 +6,7 @@ import com.google.inject.Inject;
 import com.wadpam.spara.dao.DProjectDaoBean;
 import com.wadpam.spara.dao.DTicketDaoBean;
 import com.wadpam.spara.domain.DProject;
+import com.wadpam.spara.domain.DTicket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +18,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by sosandstrom on 2014-12-30.
@@ -36,18 +42,35 @@ public class SparaResource {
     public SparaResource(DProjectDaoBean projectDao, DTicketDaoBean ticketDao) throws IOException {
         this.projectDao = projectDao;
         this.ticketDao = ticketDao;
+    }
 
-        if (SystemProperty.Environment.Value.Development.equals(SystemProperty.environment.value())) {
-            populateExample(projectDao);
+    public void populateExample() throws java.io.IOException {
+        if (SystemProperty.Environment.Value.Development.equals(SystemProperty.environment.value()) ||
+                null == projectDao.get("SPARA")) {
+            projectDao.put(DProjectDaoBean.newBuilder()
+                .id("SPARA")
+                .displayName("Spara, the Issue Manager")
+                .build());
+            final Object projectKey = projectDao.getKey("SPARA");
+
+            ticketDao.put(DTicketDaoBean.newBuilder()
+                    .projectKey(projectKey)
+                    .id(1L)
+                    .title("Bootstrap the Spara project")
+                    .build());
+
+            LOGGER.info("populated example");
         }
     }
 
-    private void populateExample(DProjectDaoBean projectDao) throws java.io.IOException {
-        final DProject spara = new DProject();
-        spara.setId("SPARA");
-        spara.setDisplayName("Spara, the Issue Manager");
-        projectDao.put(spara);
-        LOGGER.info("populated example");
+    static final Pattern TICKET_PATTERN = Pattern.compile("([A-Z]+-[\\d]+)[\\s,:]+");
+    public static TreeSet<String> findTicketIds(String message) {
+        final TreeSet<String> tickets = new TreeSet<>();
+        Matcher matcher = TICKET_PATTERN.matcher(message);
+        while (matcher.find()) {
+            tickets.add(matcher.group(1));
+        }
+        return tickets;
     }
 
     @GET

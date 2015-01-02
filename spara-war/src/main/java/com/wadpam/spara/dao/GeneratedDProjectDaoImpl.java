@@ -20,7 +20,7 @@ import com.wadpam.spara.domain.DProject;
 /**
  * The DProject domain-object specific finders and methods go in this POJO.
  * 
- * Generated on 2014-12-30T10:42:27.179+0100.
+ * Generated on 2015-01-02T12:29:46.798+0100.
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
 public class GeneratedDProjectDaoImpl
@@ -86,7 +86,10 @@ public class GeneratedDProjectDaoImpl
   }
 
 
-// ----------------------- query methods -------------------------------
+// ----------------------- DProject builder -------------------------------
 
+  public static DProjectMapper.Builder newBuilder() {
+    return DProjectMapper.newBuilder();
+  }
 
 }
